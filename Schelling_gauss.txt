@@ -1,0 +1,336 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+#include<math.h>
+struct Agenti{
+	int etnia;
+	float tolleranza;
+};
+int main(){
+	int n=300, i, j, m, a,b, c, cont1=0, cont2=0, cont3=0, cont4=0, h, d, f, e, g, temp, vicini, k, n_cicli=1000, iterazioni=0;
+	int arrayi[8], arrayj[8], array1[9], array2[9], conteggio[9];
+	float  max, risultati[9], tol[5], temp2, percentuale, segregazione=0.20, media2, somma, rapporto[n*n], cas, r1,r2,g1,g2, cento=0.5,sigma=0.1;
+	struct Agenti agenti[n][n];
+	k=n/3;
+	srand(time(NULL));
+	FILE *ptr_file;
+	ptr_file=fopen("dati_gauss.txt", "a+");
+	//printf("la griglia inizialmente\n");
+	while(iterazioni<n_cicli){
+	percentuale=(float)(100*iterazioni)/n_cicli;
+//	printf("%.f%%",percentuale);
+	printf("numero di cicli fatti=%d/%d",iterazioni, n_cicli);
+	for(i=0;i<n;i++){
+		for(j=0;j<n;j++){
+			a=0;
+			r1=(float)rand()/RAND_MAX;
+			if(r1==0.){
+				a=1;
+				j--;
+			}
+			if(a==0){
+			r2=(float)rand()/RAND_MAX;
+			g1=sqrt(-2.*log(r1))*cos(2.*3.14*r2);
+			g2=sqrt(-2*log(r1))*sin(2*3.14*r2);
+			agenti[i][j].etnia=(rand())%2+1;
+			agenti[i][j].tolleranza=cento+(sigma*g1);
+		}
+			//printf("%d ", agenti[i][j].etnia);
+			if(agenti[i][j].tolleranza>1 || agenti[i][j].tolleranza<0){
+				//printf("ti avverto tolleranza=%f\n", agenti[i][j].tolleranza);
+				printf("r1=%f r2=%f g1=%f g2=%f", r1, r2, g1, g2);
+				j--;
+			}
+		
+		}
+		//printf("\n");
+	}
+	printf("\n\n");
+	/*for(i=0;i<n;i++){
+		for(j=0;j<n;j++){
+			printf("%f ", agenti[i][j].tolleranza);
+		}
+		printf("\n");
+	}*/
+	cont1=0;
+	cont2=0;
+	cont3=0;
+	for(m=0;m<1000;m++){
+		for(i=0;i<n;i++){
+			for(j=0;j<n;j++){
+				cont1=0;
+				cont2=0;
+				for(h=0;h<8;h++){
+					arrayi[h]=0;
+					arrayj[h]=0;
+				}
+				if(i>0 && j>0 && j<n-1 && i<n-1){
+					d=1;
+					e=2;
+					f=1;
+					g=2;
+					vicini=8;
+				}
+				if(i==0 && j>0 && j<n-1){
+					d=0;
+					e=2;
+					f=1;
+					g=2;
+					vicini=5;
+				}
+				if(i==n-1 && j<n-1 && j>0){
+					d=1;
+					e=1;
+					f=1;
+					g=2;
+					vicini=5;
+				}
+				if(i>0 && i<n-1 && j==0){
+					d=1;
+					e=2;
+					f=0;
+					g=2;
+					vicini=5;
+				}
+				if (j==n-1 && i>0 && i<n-1){
+					d=1;
+					e=2;
+					f=1;
+					g=1;
+					vicini=5;
+				}
+				if(i==0 && j==0){
+					d=0;
+					e=2;
+					f=0;
+					g=2;
+					vicini=3;
+				}
+				if(i==n-1 && j==0){
+					d=1;
+					e=1;
+					f=0;
+					g=2;
+					vicini=3;
+				}
+				if(i==0 && j==n-1){
+					d=0;
+					e=2;
+					f=1;
+					g=1;
+					vicini=3;
+				}
+				if(i==n-1 && j==n-1){
+					d=1;
+					e=1;
+					f=1;
+					g=1;
+					vicini=3;
+				}
+				max=(float)vicini*agenti[i][j].tolleranza;
+				if (agenti[i][j].etnia!=0){
+					for(a=i-d;a<i+e;a++){
+						for(b=j-f;b<j+g;b++){
+							if(a==i && b==j){
+								continue;
+							}
+							if(agenti[a][b].etnia!=agenti[i][j].etnia){
+								cont1++;
+								arrayi[cont1]=a;
+								arrayj[cont1]=b;
+							}
+						}
+					}
+					if(cont1>max){
+						c=rand()%cont1;
+						temp=agenti[arrayi[c]][arrayj[c]].etnia;
+						temp2=agenti[arrayi[c]][arrayj[c]].tolleranza;
+						agenti[arrayi[c]][arrayj[c]].etnia=agenti[i][j].etnia;
+						agenti[arrayi[c]][arrayj[c]].tolleranza=agenti[i][j].tolleranza;
+						agenti[i][j].etnia=temp;
+						agenti[i][j].tolleranza=temp2;
+						cont3++;
+					}
+				}				
+			}	
+		}
+	}
+//	printf("la griglia alla fine\n");
+	/*for(i=0;i<n;i++){
+		for(j=0;j<n;j++){
+			printf("%d ", agenti[i][j].etnia);
+		}
+	//	printf("\n");
+	}*/
+	//printf("ci sono stati %d spostamenti", cont3);*/
+/*	a=0;
+	b=0;
+	c=0;
+	d=0;
+	cont1=0;
+	cont2=0;
+	cont3=0;
+	cont4=0;
+	for(i=0;i<9;i++){
+		array1[i]=0;
+		array2[i]=0;
+	}
+	while(b<n){
+		for(i=a;i<a+k;i++){
+			for(j=b;j<b+k;j++){
+				if(agenti[i][j].etnia==1){
+					cont2++;
+					array1[cont1]=cont2;
+				}
+				if(agenti[i][j].etnia==2){
+					cont4++;
+					array2[cont3]=cont4;
+				}
+			}
+			if(i==(a+k)-1 && i<n){
+				if(i!=n-1){
+				a=a+k;
+				}
+				cont3++;
+				cont4=0;
+				cont2=0;
+				cont1++;
+			}
+		}
+		a=0;
+		b=b+k;
+	}
+
+	printf("\n");
+	cont1=0;
+	for(i=0;i<9;i++){
+		if(array1[i]>=array2[i]){
+			risultati[i]=(float)array2[i]/array1[i];
+		}
+		if(array1[i]<array2[i]){
+			risultati[i]=(float)array1[i]/array2[i];
+		}
+		//printf("%f ",risultati[i]);
+	}
+	
+	if(iterazioni==0){
+		for(i=0;i<9;i++){
+			conteggio[i]=0;
+		}
+	}
+	for(i=0;i<9;i++){
+		if(risultati[i]<segregazione){
+			conteggio[i]=conteggio[i]+1;
+		}
+	}
+	*/
+	
+	cont2=0;
+	somma=0.;
+	for(i=0;i<n;i++){
+		for(j=0;j<n;j++){
+			cont1=0;
+			if(i>0 && j>0 && j<n-1 && i<n-1){
+				d=1;
+				e=2;
+				f=1;
+				g=2;
+				vicini=8;
+			}
+			if(i==0 && j>0 && j<n-1){
+				d=0;
+				e=2;
+				f=1;
+				g=2;
+				vicini=5;
+			}
+			if(i==n-1 && j<n-1 && j>0){
+				d=1;
+				e=1;
+				f=1;
+				g=2;
+				vicini=5;
+			}
+			if(i>0 && i<n-1 && j==0){
+				d=1;
+				e=2;
+				f=0;
+				g=2;
+				vicini=5;
+				}
+			if (j==n-1 && i>0 && i<n-1){
+				d=1;
+				e=2;
+				f=1;
+				g=1;
+				vicini=5;
+			}
+			if(i==0 && j==0){
+				d=0;
+				e=2;
+				f=0;
+				g=2;
+				vicini=3;
+				}
+			if(i==n-1 && j==0){
+				d=1;
+				e=1;
+				f=0;
+				g=2;
+				vicini=3;
+			}
+			if(i==0 && j==n-1){
+				d=0;
+				e=2;
+				f=1;
+				g=1;
+				vicini=3;
+			}
+			if(i==n-1 && j==n-1){
+				d=1;
+				e=1;
+				f=1;
+				g=1;
+				vicini=3;
+			}
+			for(a=i-d;a<i+e;a++){
+				for(b=j-f;b<j+g;b++){
+					if(a==i && b==j){
+						continue;
+						}
+					if(agenti[a][b].etnia==agenti[i][j].etnia){
+						cont1++;
+					}
+				}
+			}
+			rapporto[cont2]=(float)cont1/vicini;
+			somma=somma+rapporto[cont2];
+			//printf("%3.2f ", rapporto[cont2]);
+			cont2++;
+		}
+		printf("\n");
+	}
+	//printf("%d\n", cont2);
+	media2=(float)somma/(n*n);
+	//printf("%f\n", media2);
+
+	
+	fprintf(ptr_file,"%f\n",media2 );
+	iterazioni++;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
